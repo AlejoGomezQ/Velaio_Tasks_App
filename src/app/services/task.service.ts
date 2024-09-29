@@ -37,4 +37,50 @@ export class TaskService {
       this.tasksSubject.next(this.tasks);
     }
   }
+
+  public addPersonToTask(taskId: number, person: Person): void {
+    const task = this.tasks.find((t) => t.id === taskId);
+    if (task) {
+      task.people.push(person);
+      this.tasksSubject.next(this.tasks);
+    }
+  }
+
+  public removePersonFromTask(taskId: number, personName: string): void {
+    const task = this.tasks.find((t) => t.id === taskId);
+    if (task) {
+      task.people = task.people.filter((p) => p.fullName !== personName);
+      this.tasksSubject.next(this.tasks);
+    }
+  }
+
+  public addSkillToPerson(
+    taskId: number,
+    personName: string,
+    skill: Skill
+  ): void {
+    const task = this.tasks.find((t) => t.id === taskId);
+    if (task) {
+      const person = task.people.find((p) => p.fullName === personName);
+      if (person) {
+        person.skills.push(skill);
+        this.tasksSubject.next(this.tasks);
+      }
+    }
+  }
+
+  public removeSkillFromPerson(
+    taskId: number,
+    personName: string,
+    skillName: string
+  ): void {
+    const task = this.tasks.find((t) => t.id === taskId);
+    if (task) {
+      const person = task.people.find((p) => p.fullName === personName);
+      if (person) {
+        person.skills = person.skills.filter((s) => s.name !== skillName);
+        this.tasksSubject.next(this.tasks);
+      }
+    }
+  }
 }
