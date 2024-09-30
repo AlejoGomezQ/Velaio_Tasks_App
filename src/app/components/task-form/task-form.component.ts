@@ -26,7 +26,10 @@ export class TaskFormComponent {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       deadline: ['', [Validators.required]],
-      people: this.fb.array([], [this.uniqueNameValidator()]),
+      people: this.fb.array(
+        [],
+        [Validators.required, this.uniqueNameValidator()]
+      ),
     });
   }
 
