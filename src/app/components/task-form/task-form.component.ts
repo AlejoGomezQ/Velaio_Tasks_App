@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.scss',
 })
-export class TaskFormComponent implements OnInit {
+export class TaskFormComponent {
   taskForm: FormGroup;
 
   constructor(private fb: FormBuilder, private taskService: TaskService) {
@@ -29,8 +29,6 @@ export class TaskFormComponent implements OnInit {
       people: this.fb.array([], [this.uniqueNameValidator()]),
     });
   }
-
-  ngOnInit(): void {}
 
   get peopleFormArray(): FormArray {
     return this.taskForm.get('people') as FormArray;
@@ -85,7 +83,16 @@ export class TaskFormComponent implements OnInit {
         people: this.taskForm.value.people,
       };
       this.taskService.addTask(newTask);
+
+      this.clearPeopleFormArray();
+
       this.taskForm.reset();
+    }
+  }
+
+  clearPeopleFormArray(): void {
+    while (this.peopleFormArray.length !== 0) {
+      this.peopleFormArray.removeAt(0);
     }
   }
 }
