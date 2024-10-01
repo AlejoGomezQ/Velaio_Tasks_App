@@ -18,7 +18,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class TaskListComponent implements OnInit {
   tasks$: Observable<Task[]>;
+
   filteredTasks$: Observable<Task[]>;
+
   statusFilter: 'all' | 'completed' | 'pending' = 'all';
 
   constructor(private taskService: TaskService) {

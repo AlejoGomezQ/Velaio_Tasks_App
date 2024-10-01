@@ -73,6 +73,36 @@ export class TaskFormComponent {
     skillsFormArray.removeAt(skillIndex);
   }
 
+  hasDuplicateNames(): boolean {
+    const people = this.peopleFormArray.value;
+    const names = people.map((person: Person) => person.fullName.toLowerCase());
+    const uniqueNames = new Set(names);
+    return names.length !== uniqueNames.size;
+  }
+
+  onSubmit(): void {
+    if (this.taskForm.valid) {
+      const newTask = {
+        id: Date.now(),
+        title: this.taskForm.value.title,
+        deadline: this.taskForm.value.deadline,
+        completed: false,
+        people: this.taskForm.value.people,
+      };
+      this.taskService.addTask(newTask);
+
+      this.clearPeopleFormArray();
+
+      this.taskForm.reset();
+    }
+  }
+
+  clearPeopleFormArray(): void {
+    while (this.peopleFormArray.length !== 0) {
+      this.peopleFormArray.removeAt(0);
+    }
+  }
+
   uniqueNameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const people = control.value as Person[];
@@ -83,13 +113,6 @@ export class TaskFormComponent {
       }
       return null;
     };
-  }
-
-  hasDuplicateNames(): boolean {
-    const people = this.peopleFormArray.value;
-    const names = people.map((person: Person) => person.fullName.toLowerCase());
-    const uniqueNames = new Set(names);
-    return names.length !== uniqueNames.size;
   }
 
   dateValidator(): ValidatorFn {
@@ -119,7 +142,6 @@ export class TaskFormComponent {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       if (value === null || value === '') return null;
-      // Allow letters, numbers, and special characters, but not only numbers
       if (/^\d+$/.test(value)) {
         return { notString: true };
       }
@@ -135,28 +157,5 @@ export class TaskFormComponent {
       }
       return null;
     };
-  }
-
-  onSubmit(): void {
-    if (this.taskForm.valid) {
-      const newTask = {
-        id: Date.now(),
-        title: this.taskForm.value.title,
-        deadline: this.taskForm.value.deadline,
-        completed: false,
-        people: this.taskForm.value.people,
-      };
-      this.taskService.addTask(newTask);
-
-      this.clearPeopleFormArray();
-
-      this.taskForm.reset();
-    }
-  }
-
-  clearPeopleFormArray(): void {
-    while (this.peopleFormArray.length !== 0) {
-      this.peopleFormArray.removeAt(0);
-    }
   }
 }
