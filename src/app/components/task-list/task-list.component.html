@@ -21,7 +21,7 @@
                 </h3>
                 <button (click)="toggleTaskCompletion(task.id)"
                     [ngClass]="{'bg-purple-500 hover:bg-purple-600': !task.completed, 'bg-green-500 hover:bg-green-600': task.completed}"
-                    class="px-3 py-1 text-white text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400 transition-colors whitespace-nowrap">
+                    class="px-3 py-1 text-white text-sm rounded-full focus:outline-none focus:ring-2 transition-colors whitespace-nowrap">
                     {{ task.completed ? 'Completada' : 'Marcar como completada' }}
                 </button>
             </div>
