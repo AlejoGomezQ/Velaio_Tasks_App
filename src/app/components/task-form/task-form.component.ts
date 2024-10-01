@@ -23,10 +23,14 @@ import { Person } from '../../models';
 export class TaskFormComponent {
   taskForm: FormGroup;
 
+  minDate: string;
+
   constructor(private fb: FormBuilder, private taskService: TaskService) {
+    this.minDate = new Date().toISOString().split('T')[0];
+
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
-      deadline: ['', [Validators.required]],
+      deadline: ['', [Validators.required, this.dateValidator()]],
       people: this.fb.array(
         [],
         [Validators.required, this.uniqueNameValidator()]
@@ -84,6 +88,18 @@ export class TaskFormComponent {
     const names = people.map((person: Person) => person.fullName.toLowerCase());
     const uniqueNames = new Set(names);
     return names.length !== uniqueNames.size;
+  }
+
+  dateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const selectedDate = new Date(control.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        return { pastDate: true };
+      }
+      return null;
+    };
   }
 
   onSubmit(): void {

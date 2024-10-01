@@ -12,7 +12,7 @@
     </div>
 
     <div class="mb-6">
-        <input type="date" id="deadline" formControlName="deadline"
+        <input type="date" id="deadline" formControlName="deadline" [min]="minDate"
             class="w-full p-3 bg-transparent border-b-2 border-purple-200 focus:border-purple-500 outline-none transition-colors text-purple-800">
         <div *ngIf="taskForm.get('deadline')?.invalid && (taskForm.get('deadline')?.dirty || taskForm.get('deadline')?.touched)"
             class="text-red-500 text-sm mt-1">
