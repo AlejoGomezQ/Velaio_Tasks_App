@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { CommonModule } from '@angular/common';
+import { Person } from '../../models';
 
 @Component({
   selector: 'app-task-form',
@@ -48,10 +49,12 @@ export class TaskFormComponent {
       skills: this.fb.array([], Validators.required),
     });
     this.peopleFormArray.push(personForm);
+    this.taskForm.updateValueAndValidity();
   }
 
   removePerson(index: number): void {
     this.peopleFormArray.removeAt(index);
+    this.taskForm.updateValueAndValidity();
   }
 
   addSkill(personIndex: number): void {
@@ -66,14 +69,21 @@ export class TaskFormComponent {
 
   uniqueNameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const people = control.value as any[];
-      const names = people.map((p) => p.fullName.toLowerCase());
+      const people = control.value as Person[];
+      const names = people.map((person) => person.fullName.toLowerCase());
       const uniqueNames = new Set(names);
       if (names.length !== uniqueNames.size) {
         return { duplicateName: true };
       }
       return null;
     };
+  }
+
+  hasDuplicateNames(): boolean {
+    const people = this.peopleFormArray.value;
+    const names = people.map((person: Person) => person.fullName.toLowerCase());
+    const uniqueNames = new Set(names);
+    return names.length !== uniqueNames.size;
   }
 
   onSubmit(): void {
