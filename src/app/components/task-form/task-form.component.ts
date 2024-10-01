@@ -49,8 +49,8 @@ export class TaskFormComponent {
   addPerson(): void {
     const personForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(5)]],
-      age: ['', [Validators.required, Validators.min(18)]],
-      skills: this.fb.array([], Validators.required),
+      age: ['', [Validators.required, Validators.min(18), this.ageValidator()]],
+      skills: this.fb.array([], [Validators.required, this.skillsValidator()]),
     });
     this.peopleFormArray.push(personForm);
     this.taskForm.updateValueAndValidity();
@@ -63,7 +63,9 @@ export class TaskFormComponent {
 
   addSkill(personIndex: number): void {
     const skillsFormArray = this.getSkillsFormArray(personIndex);
-    skillsFormArray.push(this.fb.control('', Validators.required));
+    skillsFormArray.push(
+      this.fb.control('', [Validators.required, this.stringValidator()])
+    );
   }
 
   removeSkill(personIndex: number, skillIndex: number): void {
@@ -97,6 +99,38 @@ export class TaskFormComponent {
       today.setHours(0, 0, 0, 0);
       if (selectedDate < today) {
         return { pastDate: true };
+      }
+      return null;
+    };
+  }
+
+  ageValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (value === null || value === '') return null;
+      if (!Number.isInteger(Number(value))) {
+        return { notInteger: true };
+      }
+      return null;
+    };
+  }
+
+  stringValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (value === null || value === '') return null;
+      if (!/^[a-zA-Z\s]+$/.test(value)) {
+        return { notString: true };
+      }
+      return null;
+    };
+  }
+
+  skillsValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const skills = control.value as string[];
+      if (skills.some((skill) => !/^[a-zA-Z\s]+$/.test(skill))) {
+        return { invalidSkills: true };
       }
       return null;
     };

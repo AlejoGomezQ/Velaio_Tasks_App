@@ -34,12 +34,13 @@
             </div>
 
             <div class="mb-4">
-                <input [id]="'age' + i" type="number" formControlName="age" placeholder="Edad"
+                <input [id]="'age' + i" type="number" formControlName="age" placeholder="Edad" step="1"
                     class="w-full p-3 bg-transparent border-b-2 border-purple-200 focus:border-purple-500 outline-none transition-colors text-purple-800 placeholder-purple-300">
                 <div *ngIf="person.get('age')?.invalid && (person.get('age')?.dirty || person.get('age')?.touched)"
                     class="text-red-500 text-sm mt-1">
                     <span *ngIf="person.get('age')?.errors?.['required']">La edad es requerida.</span>
                     <span *ngIf="person.get('age')?.errors?.['min']">Debes ser mayor de 18 años.</span>
+                    <span *ngIf="person.get('age')?.errors?.['notInteger']">La edad debe ser un número entero.</span>
                 </div>
             </div>
 
@@ -51,6 +52,7 @@
                         class="flex-grow p-2 bg-purple-100 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 text-purple-800 placeholder-purple-400">
                     <div *ngIf="skill.invalid && (skill.dirty || skill.touched)" class="text-red-500 text-sm mt-1">
                         <span *ngIf="skill.errors?.['required']">La habilidad es requerida.</span>
+                        <span *ngIf="skill.errors?.['notString']">La habilidad debe contener solo letras.</span>
                     </div>
                     <button type="button" (click)="removeSkill(i, j)"
                         class="p-2 text-purple-500 hover:text-purple-700 focus:outline-none">
@@ -61,6 +63,8 @@
                     class="text-red-500 text-sm mt-1">
                     <span *ngIf="getSkillsFormArray(i).errors?.['required']">Debes agregar al menos una
                         habilidad.</span>
+                    <span *ngIf="getSkillsFormArray(i).errors?.['invalidSkills']">Todas las habilidades deben contener
+                        solo letras.</span>
                 </div>
                 <button type="button" (click)="addSkill(i)"
                     class="mt-2 p-2 bg-purple-200 text-purple-700 rounded-md hover:bg-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-colors">
