@@ -119,7 +119,8 @@ export class TaskFormComponent {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       if (value === null || value === '') return null;
-      if (!/^[a-zA-Z\s]+$/.test(value)) {
+      // Allow letters, numbers, and special characters, but not only numbers
+      if (/^\d+$/.test(value)) {
         return { notString: true };
       }
       return null;
@@ -129,7 +130,7 @@ export class TaskFormComponent {
   skillsValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const skills = control.value as string[];
-      if (skills.some((skill) => !/^[a-zA-Z\s]+$/.test(skill))) {
+      if (skills.some((skill) => /^\d+$/.test(skill))) {
         return { invalidSkills: true };
       }
       return null;
